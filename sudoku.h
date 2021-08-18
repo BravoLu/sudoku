@@ -34,6 +34,7 @@ bool sudoku_setsquare(sudoku* s, int x, int y, squaretype v);
 /* Fill squares from file
    Unknown squares can be '0, '?', '.' etc.
 */
+
 bool sudoku_fromfile(sudoku* s, char* fname);
 
 /* Helps with visualisation & testing */
