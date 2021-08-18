@@ -1,1 +1,5 @@
-typedef int make_iso_compilers_happy;
+#include "specific.h"
+
+void sudoku_print(sudoku* s) {
+	
+}
