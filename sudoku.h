@@ -23,6 +23,7 @@ typedef unsigned char squaretype;
 sudoku* sudoku_init(void);
 
 /* Sets square (x, y) to the value v
+   / squaretype has error? 
    x {0 ... 8}  y {0 ... 8} v:{1 ... 9}
    Returns true if grid is still valid or false if :
    1) Grid is invalid
@@ -71,3 +72,6 @@ bool sudoku_consprop(sudoku* s);
 /* Clears all space used */
 bool sudoku_free(sudoku* q);
 
+void test_peers_units(sudoku* s, int x, int y);
+
+void print_values(sudoku* s, int x, int y);
