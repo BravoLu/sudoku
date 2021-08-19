@@ -3,7 +3,7 @@
 int i, j, k, r, c, box_r, box_c, index, num;
 int col_idx, row_idx, box_idx, peer_idx, peer_val;
 
-bool is129(char alpha){
+bool is_valid_ch(char alpha){
     return alpha == '0' || alpha == '1' || alpha == '2' || alpha == '3' || \
             alpha == '4' || alpha == '5' || alpha == '6' || alpha == '7' || \
             alpha == '8' || alpha == '9';
@@ -12,6 +12,7 @@ bool is129(char alpha){
 sudoku* sudoku_init(void){
     sudoku* s = (sudoku*) malloc(sizeof(sudoku));
     s->isvalid = true;
+    int i, j;
     for(i = 0; i < GRIDSIZE ; i++) {
         for(j = 0; j < GRIDSIZE; j++) {
             col_idx = 0;
@@ -135,7 +136,7 @@ bool is_empty_alpha(char alpha) {
 }
 
 bool isvalid_value(char c) {
-    return is129(c) || is_empty_alpha(c);
+    return is_valid_ch(c) || is_empty_alpha(c);
 }
 
 bool sudoku_fromfile(sudoku* s, char* fname){
@@ -143,8 +144,8 @@ bool sudoku_fromfile(sudoku* s, char* fname){
     if (fp == NULL) {
         return false;
     }
-    num = 0;
-    while(num<GRIDSIZE*GRIDSIZE){
+    int num = 0;
+    while(num < GRIDSIZE * GRIDSIZE){
         char tmp = fgetc(fp);
         if(isvalid_value(tmp)){
             s->cur[num] = tmp;
@@ -173,6 +174,10 @@ bool sudoku_fromfile(sudoku* s, char* fname){
                 }
             }
         }
+    }
+
+    if (fclose(fp)) {
+        
     }
 
     return true;
