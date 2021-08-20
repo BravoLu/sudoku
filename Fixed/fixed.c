@@ -10,9 +10,15 @@ bool is_valid_ch(char alpha){
 }
 
 sudoku* sudoku_init(void){
-    int i, j;
+    int i, j, col_idx, row_idx, box_idx, peer_idx, index, box_item_coord;
+
     sudoku* s = (sudoku*) malloc(sizeof(sudoku));
     s->isvalid = true;
+
+    /* initialize value */
+    memset(s->value,0,sizeof(s->value));
+    memset(s->cur,'.',sizeof(s->cur));
+
     for(i = 0; i < GRIDSIZE ; i++) {
         for(j = 0; j < GRIDSIZE; j++) {
             col_idx = 0;
@@ -20,25 +26,20 @@ sudoku* sudoku_init(void){
             box_idx = 0;
             peer_idx = 0;
             
-            /* initialize value */
-            for (k = 0 ; k < GRIDSIZE; k++){
-                s->value[i*GRIDSIZE+j][k] = false;
-            }
-            index = i*GRIDSIZE + j;
-            /* initialize */ 
-            s->cur[index] = '.';
+            index = i * GRIDSIZE + j;
+
             /* construct cols */
             for (k = 0 ; k < GRIDSIZE; k++){
                 if (k != i) {
-                    s->cols[index][col_idx++] = k*GRIDSIZE + j;
-                    s->peers[index][peer_idx++] = k*GRIDSIZE + j;
+                    s->cols[index][col_idx++] = k * GRIDSIZE + j;
+                    s->peers[index][peer_idx++] = k * GRIDSIZE + j;
                 }
             } 
             /* construct rows */
             for (k = 0; k < GRIDSIZE; k++) {
                 if (k != j) {
-                    s->rows[index][row_idx++] = i*GRIDSIZE + k;
-                    s->peers[index][peer_idx++] = i*GRIDSIZE + k;
+                    s->rows[index][row_idx++] = i * GRIDSIZE + k;
+                    s->peers[index][peer_idx++] = i * GRIDSIZE + k;
                 }
             }
             /* construct box 
@@ -47,12 +48,12 @@ sudoku* sudoku_init(void){
             box_c = j / 3 * UNITS;
             for (r = 0; r < UNITS; r++) {
                 for (c = 0; c < UNITS; c++) {
-                    int tmp = (box_r + r) * GRIDSIZE + ( box_c + c);
-                    if (tmp != (i*GRIDSIZE + j)){
-                        s->boxes[index][box_idx++] = tmp;
+                    box_item_coord = (box_r + r) * GRIDSIZE + (box_c + c);
+                    if (box_item_coord != (i * GRIDSIZE + j)) {
+                        s->boxes[index][box_idx++] = box_item_coord;
                     }
                     if ((box_r + r) != i && (box_c + c) != j) {
-                        s->peers[index][peer_idx++] = tmp; 
+                        s->peers[index][peer_idx++] = box_item_coord;
                     }
                 }
             }
@@ -63,8 +64,9 @@ sudoku* sudoku_init(void){
 }
 
 void print_values(sudoku* s, int x, int y) {
+    int i;
     for(i = 0; i < GRIDSIZE; i++ ) {
-        if(s->value[y*GRIDSIZE+x][i]){
+        if(s->value[y * GRIDSIZE + x][i]){
             printf("true ");
         }
         else{
@@ -76,7 +78,9 @@ void print_values(sudoku* s, int x, int y) {
 }
 
 bool sudoku_setsquare(sudoku* s, int x, int y, squaretype v){
-    v += 48;
+
+    v += '0';
+
     if (v == '0'){
         /* revert the setsquare operation */
         s->cur[y*GRIDSIZE+x] = '.';
@@ -124,6 +128,7 @@ void test_peers_units(sudoku* s, int x, int y) {
     printf("\n");
     
     printf("peers:");
+    for (i = 0; i<PEERSIZE; i++){
     for (i = 0; i<PEERSIZE; i++){
         printf("%d ", s->peers[y*GRIDSIZE+x][i]);
     }
@@ -184,7 +189,8 @@ bool sudoku_fromfile(sudoku* s, char* fname) {
     }
 
     if (fclose(fp)) {
-        
+        printf("File close ERROR! Can not close file %s\n", fname);
+	return false;
     }
 
     return true;
@@ -249,4 +255,3 @@ bool sudoku_free(sudoku* q) {
     free(q);
     return true;
 }
-
