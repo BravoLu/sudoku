@@ -131,46 +131,52 @@ void test_peers_units(sudoku* s, int x, int y) {
 }
 
 
-bool is_empty_alpha(char alpha) {
-    return alpha == '?' || alpha == '.' || alpha == '0';
+bool is_empty_ch(char c) {
+    return c == '?' || c == '.' || c == '0';
 }
 
 bool isvalid_value(char c) {
     return is_valid_ch(c) || is_empty_alpha(c);
 }
 
-bool sudoku_fromfile(sudoku* s, char* fname){
+bool sudoku_fromfile(sudoku* s, char* fname) {
     FILE *fp = fopen(fname, "r");
     if (fp == NULL) {
+        printf("File open ERROR! Can not open file %s\n", fname);
         return false;
     }
-    int num = 0;
-    while(num < GRIDSIZE * GRIDSIZE){
-        char tmp = fgetc(fp);
-        if(isvalid_value(tmp)){
-            s->cur[num] = tmp;
-            if(is_empty_alpha(tmp)) {
-                s->cur[num] = '.';
-            }
-            num ++;
+
+    char buf;
+
+    int grid_coord = 0;
+
+    while (!feof(fp)) {
+        buf = fgetc(fp);
+        if (is_valid_ch(buf)) {
+            s->cur[grid_coord] = buf;
+            grid_coord++;
         }
-        if( feof(fp) ){
-            break;
+        else if (is_empty_ch(buf)) {
+            s->cur[grid_coord] = '.';
+            grid_coord++;
         }
     }
 
-    if (num != GRIDSIZE*GRIDSIZE) {
+    if (grid_coord != GRIDSIZE * GRIDSIZE) {
         return false;
     }
 
     /* TODO: set value */
+    int i, j, k;
+    int peer_idx, peer_val;
+
     for (i = 0; i < GRIDSIZE; i++){
         for(j = 0; j < GRIDSIZE; j++){
             for(k = 0 ; k < PEERSIZE; k++){
-                peer_idx = s->peers[i*GRIDSIZE+j][k];
-                if (is129(s->cur[peer_idx])){
+                peer_idx = s->peers[i * GRIDSIZE + j][k];
+                if (is_valid_ch(s->cur[peer_idx])){
                     peer_val = s->cur[peer_idx] - '0' - 1;
-                    s->value[i*GRIDSIZE+j][peer_val] = true; 
+                    s->value[i * GRIDSIZE + j][peer_val] = true; 
                 }
             }
         }
