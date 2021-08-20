@@ -10,9 +10,9 @@ bool is_valid_ch(char alpha){
 }
 
 sudoku* sudoku_init(void){
+    int i, j;
     sudoku* s = (sudoku*) malloc(sizeof(sudoku));
     s->isvalid = true;
-    int i, j;
     for(i = 0; i < GRIDSIZE ; i++) {
         for(j = 0; j < GRIDSIZE; j++) {
             col_idx = 0;
@@ -136,19 +136,22 @@ bool is_empty_ch(char c) {
 }
 
 bool isvalid_value(char c) {
-    return is_valid_ch(c) || is_empty_alpha(c);
+    return is_valid_ch(c) || is_empty_ch(c);
 }
 
 bool sudoku_fromfile(sudoku* s, char* fname) {
-    FILE *fp = fopen(fname, "r");
+    char buf;
+    int grid_coord;
+    int i, j, k;
+    int peer_idx, peer_val;
+    FILE *fp;
+    
+    grid_coord = 0;
+    fp = fopen(fname, "r");
     if (fp == NULL) {
         printf("File open ERROR! Can not open file %s\n", fname);
         return false;
     }
-
-    char buf;
-
-    int grid_coord = 0;
 
     while (!feof(fp)) {
         buf = fgetc(fp);
@@ -167,8 +170,6 @@ bool sudoku_fromfile(sudoku* s, char* fname) {
     }
 
     /* TODO: set value */
-    int i, j, k;
-    int peer_idx, peer_val;
 
     for (i = 0; i < GRIDSIZE; i++){
         for(j = 0; j < GRIDSIZE; j++){
@@ -222,7 +223,7 @@ bool sudoku_isknown(sudoku* s, int x, int y) {
     if(s==NULL){
         return false;
     }
-    return is129(s->cur[y*GRIDSIZE+x]);
+    return is_valid_ch(s->cur[y*GRIDSIZE+x]);
 }
 
 bool sudoku_isvalid(sudoku* s) {
