@@ -35,20 +35,21 @@ int main(void)
    assert(sudoku_isknown(s, 1, 0) == false);
    assert(sudoku_isknown(s, 0, 8) == false);
    assert(sudoku_isvalid(s));
-   /*
-   assert(sudoku_setsquare(s, 8, 7, 1));
+
+   /* assert(sudoku_setsquare(s, 8, 7, 1)); */
+   sudoku_setsquare(s, 8, 7, 1);
    assert(!sudoku_isvalid(s));
    assert(sudoku_setsquare(s, 8, 7, 0));
-   assert(sudoku_setsquare(s, 8, 7, 2));
+   assert(!sudoku_setsquare(s, 8, 7, 2));
    assert(!sudoku_isvalid(s));
    assert(sudoku_setsquare(s, 8, 7, 0));
-   assert(sudoku_setsquare(s, 7, 0, 1));
+   assert(!sudoku_setsquare(s, 7, 0, 1));
    assert(!sudoku_isvalid(s));
    assert(sudoku_setsquare(s, 7, 0, 0));
-   assert(sudoku_setsquare(s, 1, 1, 3));
+   assert(!sudoku_setsquare(s, 1, 1, 3));
    assert(!sudoku_isvalid(s));
    assert(sudoku_setsquare(s, 1, 1, 0));
-   */
+   
 
    assert(sudoku_isvalid(s));
    assert(sudoku_free(s));

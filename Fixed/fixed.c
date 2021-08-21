@@ -184,17 +184,20 @@ bool sudoku_eliminate(sudoku* s, int idx, squaretype v) {
     return true;
 }
 
-/* 将y*GRIDSIZE+x的value值（除了v）外，都设置为false */
+/* 将y*GRIDSIZE+x的value值（除了v）外，都设置为false */
 /* 将cur[y*GRIDSIZE+x]设置为v */
 bool sudoku_setsquare(sudoku* s, int x, int y, squaretype v) {
     int i;
-    for (i = 1; i < GRIDSIZE+1 ; i ++){
-        if (v != i  && !sudoku_eliminate(s, y*GRIDSIZE+x, i)){
-            /*return false;*/
-        }
+    if (v==0) {
+        s->cur[y*GRIDSIZE+x] = '.';
+        return true;
     }
     s->cur[y*GRIDSIZE+x] = v + '0';
-    return true;    
+    for (i = 1; i < GRIDSIZE+1 ; i ++){
+        if (v != i  && !sudoku_eliminate(s, y*GRIDSIZE+x, i)){
+        }
+    }
+    return sudoku_isvalid(s);   
 }
 
 
