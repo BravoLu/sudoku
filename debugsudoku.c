@@ -3,19 +3,23 @@
 
 int main(void)
 {
-   char str[GRIDSTR];
+   sudoku* s = NULL;
 
+   char str[GRIDSTR];
    bool b1[GRIDSIZE] = {true,true,false,true,false,true,true,true,true};
    bool *b2;
-   sudoku* s = NULL;
 
    printf("Basic Sudoku Tests ... Start\n");
    
    sudoku_tostring(s, str); 
    assert(strcmp(str, "") == 0);
    assert(!sudoku_isknown(NULL, 0, 0));
+   sudoku_print(s);
+   
+   
    assert(!sudoku_isvalid(s));
-
+   
+   
    s = sudoku_init();
    assert(s != NULL);
    
@@ -73,12 +77,31 @@ int main(void)
    assert(sudoku_fromfile(s, "data/9x9-easy-28.sud"));
    sudoku_print(s);
    assert(sudoku_isvalid(s));
+
+   
    b2 = sudoku_taken(s, 8, 1);
-   /*print_values(s, 8, 1);*/
    
    assert(memcmp(b1, b2, sizeof(b1))==0);
+   
 
+   s = sudoku_init();
+   assert(sudoku_fromfile(s, "data/9x9-med-32.sud"));
+   printf("original: \n");
+   sudoku_print(s);
+   printf("after set: \n");   
+   assert(sudoku_consprop(s)); 
+   sudoku_print(s);
 
+   
+   s = sudoku_init();
+   assert(sudoku_fromfile(s, "data/9x9-easy-28.sud"));
+   printf("original: \n");
+   sudoku_print(s);
+   printf("after set: \n");   
+   assert(sudoku_consprop(s)); 
+   sudoku_print(s);
+   assert(sudoku_free(s));
+   
    printf("Basic Sudoku Tests ... Succeeded\n");
    return 0;
 

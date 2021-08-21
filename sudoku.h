@@ -75,3 +75,7 @@ bool sudoku_free(sudoku* q);
 void test_peers_units(sudoku* s, int x, int y);
 
 void print_values(sudoku* s, int x, int y);
+
+int sudoku_value_num(sudoku* s, int idx, int* assign_value);
+
+bool sudoku_cp_solve(sudoku* s);
